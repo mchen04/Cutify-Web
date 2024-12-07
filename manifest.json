@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "Cutify Web",
+  "version": "1.0.0",
+  "description": "Customize any website with cute themes and personalized styles",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "css": ["styles/themes.css"],
+      "js": ["scripts/content.js"]
+    },
+    {
+      "matches": ["*://*.google.com/*"],
+      "css": ["styles/google.css"]
+    }
+  ],
+  "web_accessible_resources": [{
+    "resources": [
+      "assets/fonts/*",
+      "assets/images/*",
+      "dashboard.html"
+    ],
+    "matches": ["<all_urls>"]
+  }]
+}

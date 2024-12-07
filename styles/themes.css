@@ -1,0 +1,161 @@
+/* Base Theme Variables */
+:root {
+  --cutify-primary-color: #ff9ed2;
+  --cutify-secondary-color: #b8c0ff;
+  --cutify-accent-color: #ffd6ff;
+  --cutify-text-color: #594a4e;
+  --cutify-bg-color: #fff8fa;
+  --cutify-font-family: 'Quicksand', sans-serif;
+  --cutify-border-radius: 20px;
+}
+
+/* Font imports */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+/* Global Styles for All Themes */
+[data-theme] {
+  font-family: var(--cutify-font-family) !important;
+  color: var(--cutify-text-color) !important;
+  background-color: var(--cutify-bg-color) !important;
+  transition: all 0.3s ease !important;
+}
+
+[data-theme] button,
+[data-theme] .button,
+[data-theme] input[type="button"],
+[data-theme] input[type="submit"] {
+  background-color: var(--cutify-primary-color) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: var(--cutify-border-radius) !important;
+  padding: 8px 16px !important;
+  cursor: pointer !important;
+  transition: transform 0.2s ease !important;
+}
+
+[data-theme] button:hover,
+[data-theme] .button:hover,
+[data-theme] input[type="button"]:hover,
+[data-theme] input[type="submit"]:hover {
+  transform: scale(1.05) !important;
+}
+
+[data-theme] input[type="text"],
+[data-theme] input[type="password"],
+[data-theme] input[type="email"],
+[data-theme] textarea {
+  background-color: white !important;
+  border: 2px solid var(--cutify-accent-color) !important;
+  border-radius: calc(var(--cutify-border-radius) / 2) !important;
+  padding: 8px 12px !important;
+}
+
+[data-theme] a {
+  color: var(--cutify-primary-color) !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-theme] a:hover {
+  color: var(--cutify-secondary-color) !important;
+  text-decoration: underline !important;
+}
+
+[data-theme] h1, 
+[data-theme] h2, 
+[data-theme] h3, 
+[data-theme] h4, 
+[data-theme] h5, 
+[data-theme] h6 {
+  color: var(--cutify-primary-color) !important;
+  font-weight: 600 !important;
+}
+
+[data-theme] img {
+  border-radius: calc(var(--cutify-border-radius) / 2) !important;
+  transition: transform 0.3s ease !important;
+}
+
+[data-theme] img:hover {
+  transform: scale(1.02) !important;
+}
+
+/* Card-like elements */
+[data-theme] div:not([class*="cutify"]) {
+  border-radius: calc(var(--cutify-border-radius) / 3) !important;
+}
+
+/* Pastel Paradise Theme */
+[data-theme="pastel-paradise"] {
+  --cutify-primary-color: #ffa6d2;
+  --cutify-secondary-color: #a6c1ff;
+  --cutify-accent-color: #ffd6e6;
+  --cutify-text-color: #6e5a6e;
+  --cutify-bg-color: #fff0f5;
+  --cutify-font-family: 'Quicksand', sans-serif;
+  background: linear-gradient(135deg, var(--cutify-bg-color), var(--cutify-accent-color)) !important;
+}
+
+/* Starry Night Theme */
+[data-theme="starry-night"] {
+  --cutify-primary-color: #b19cd9;
+  --cutify-secondary-color: #9db4ff;
+  --cutify-accent-color: #e6e6ff;
+  --cutify-text-color: #e6e6ff;
+  --cutify-bg-color: #2a2a4a;
+  --cutify-font-family: 'Poppins', sans-serif;
+  background: var(--cutify-bg-color) !important;
+}
+
+/* Fluffy Clouds Theme */
+[data-theme="fluffy-clouds"] {
+  --cutify-primary-color: #87ceeb;
+  --cutify-secondary-color: #b0e0e6;
+  --cutify-accent-color: #e6f3ff;
+  --cutify-text-color: #4a6b8c;
+  --cutify-bg-color: #f0f8ff;
+  --cutify-font-family: 'Comic Neue', sans-serif;
+  background: linear-gradient(to bottom, var(--cutify-bg-color), var(--cutify-accent-color)) !important;
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Interactive Elements Animation */
+[data-theme] .cutify-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+[data-theme] .cutify-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Scrollbar Styling */
+[data-theme] ::-webkit-scrollbar {
+  width: 12px;
+}
+
+[data-theme] ::-webkit-scrollbar-track {
+  background: var(--cutify-bg-color);
+}
+
+[data-theme] ::-webkit-scrollbar-thumb {
+  background: var(--cutify-primary-color);
+  border-radius: 6px;
+}
+
+[data-theme] ::-webkit-scrollbar-thumb:hover {
+  background: var(--cutify-secondary-color);
+}

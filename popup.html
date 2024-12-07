@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Cutify Web</title>
+  <link rel="stylesheet" href="styles/popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Cutify Web</h1>
+      <div class="theme-toggle">
+        <label class="switch">
+          <input type="checkbox" id="themeToggle">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </header>
+
+    <div class="current-theme">
+      <span>Current Theme:</span>
+      <span id="currentTheme" class="theme-name">Pastel Paradise</span>
+    </div>
+
+    <button id="openDashboard" class="dashboard-btn">Customize Theme</button>
+  </div>
+  <script src="scripts/popup.js"></script>
+</body>
+</html>

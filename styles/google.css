@@ -1,0 +1,56 @@
+/* Google Search Customization */
+body {
+  background-color: #1a1a1a;
+  color: #e0e0e0;
+}
+
+/* Search bar styling */
+.RNNXgb {
+  background: #2d2d2d !important;
+  border: 1px solid #404040 !important;
+  box-shadow: none !important;
+}
+
+/* Search input text */
+.gLFyf {
+  color: #e0e0e0 !important;
+}
+
+/* Search results */
+.g {
+  background: #2d2d2d;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+/* Links */
+a:link {
+  color: #9ba3e0 !important;
+}
+
+a:visited {
+  color: #e091b9 !important;
+}
+
+/* Navigation bar */
+.hdtb-mitem a {
+  color: #e0e0e0 !important;
+}
+
+/* Search button */
+.gNO89b {
+  background-color: #404040 !important;
+  border: none !important;
+  color: #e0e0e0 !important;
+}
+
+/* Hover states */
+.gNO89b:hover {
+  background-color: #505050 !important;
+}
+
+/* Google logo */
+.logo {
+  filter: brightness(0.8) contrast(1.2);
+}
