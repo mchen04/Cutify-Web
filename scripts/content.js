@@ -156,5 +156,106 @@ class ThemeManager {
   }
 }
 
+// Create loading overlay
+const loadingOverlay = document.createElement('div');
+loadingOverlay.className = 'loading-overlay';
+loadingOverlay.innerHTML = `
+  <div class="loading-spinner"></div>
+  <div class="loading-text">
+    Applying your cute theme<span class="loading-dots"></span>
+  </div>
+`;
+document.body.appendChild(loadingOverlay);
+
+// Function to show/hide loading screen
+function toggleLoading(show, theme = null) {
+  if (theme) {
+    loadingOverlay.style.backgroundColor = theme.backgroundColor || '#fff0f5';
+    loadingOverlay.style.color = theme.textColor || '#6e5a6e';
+    loadingOverlay.style.fontFamily = theme.fontFamily || 'Quicksand';
+    
+    const spinner = loadingOverlay.querySelector('.loading-spinner');
+    if (spinner) {
+      spinner.style.setProperty('--spinner-color', theme.primaryColor || '#ffa6d2');
+      spinner.style.borderColor = `${theme.primaryColor || '#ffa6d2'}40`;
+      spinner.style.borderTopColor = theme.primaryColor || '#ffa6d2';
+    }
+  }
+  
+  loadingOverlay.classList.toggle('visible', show);
+}
+
+// Initialize theme application
+async function initTheme() {
+  try {
+    // Show loading screen
+    toggleLoading(true);
+    
+    // Get active theme from storage
+    const { activeTheme } = await chrome.storage.sync.get('activeTheme');
+    if (activeTheme) {
+      // Update loading screen with theme colors
+      toggleLoading(true, activeTheme);
+      // Apply the theme
+      await applyTheme(activeTheme);
+    }
+  } catch (error) {
+    console.error('Error initializing theme:', error);
+  } finally {
+    // Hide loading after a minimum duration to prevent flash
+    setTimeout(() => toggleLoading(false), 500);
+  }
+}
+
+// Listen for theme updates
+chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+  if (message.action === 'updateTheme') {
+    try {
+      toggleLoading(true, message.theme);
+      await applyTheme(message.theme);
+      setTimeout(() => toggleLoading(false), 500);
+    } catch (error) {
+      console.error('Error applying theme:', error);
+      toggleLoading(false);
+    }
+  }
+  // Always send a response
+  sendResponse({ success: true });
+  return true; // Required for async response
+});
+
+// Apply theme to the page
+async function applyTheme(theme) {
+  if (!theme) return;
+
+  // Create or update CSS variables
+  const root = document.documentElement;
+  root.style.setProperty('--primary-color', theme.primaryColor);
+  root.style.setProperty('--secondary-color', theme.secondaryColor);
+  root.style.setProperty('--accent-color', theme.accentColor);
+  root.style.setProperty('--text-color', theme.textColor);
+  root.style.setProperty('--background-color', theme.backgroundColor);
+  
+  // Update font family
+  if (theme.fontFamily) {
+    root.style.setProperty('--font-family', theme.fontFamily);
+    document.body.style.fontFamily = theme.fontFamily;
+  }
+  
+  // Apply background color to body and html
+  document.body.style.backgroundColor = theme.backgroundColor;
+  document.documentElement.style.backgroundColor = theme.backgroundColor;
+}
+
+// Initialize theme when page loads
+document.addEventListener('DOMContentLoaded', initTheme);
+
+// Also check theme when page becomes visible
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) {
+    initTheme();
+  }
+});
+
 // Initialize Theme Manager
 new ThemeManager();

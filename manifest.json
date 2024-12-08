@@ -27,7 +27,10 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "css": ["styles/themes.css"],
+      "css": [
+        "styles/themes.css",
+        "styles/loading.css"
+      ],
       "js": ["scripts/content.js"]
     },
     {
@@ -42,5 +45,8 @@
       "dashboard.html"
     ],
     "matches": ["<all_urls>"]
-  }]
+  }],
+  "background": {
+    "service_worker": "scripts/background.js"
+  }
 }
