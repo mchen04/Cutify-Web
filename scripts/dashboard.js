@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   // Cache DOM elements
   const themesList = document.getElementById('themesList');
-  const createThemeBtn = document.getElementById('createTheme');
+  const createThemeBtn = document.getElementById('createThemeBtn');
   const themeEditorModal = document.getElementById('themeEditorModal');
   const closeModalBtn = document.querySelector('.close-btn');
   const saveThemeBtn = document.getElementById('saveTheme');
@@ -20,6 +20,173 @@ document.addEventListener('DOMContentLoaded', () => {
   closeModalBtn.addEventListener('click', closeModal);
   saveThemeBtn.addEventListener('click', saveTheme);
   previewThemeBtn.addEventListener('click', previewCurrentTheme);
+
+  // Modal elements
+  const modal = document.getElementById('themeModal');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalForm = document.getElementById('themeForm');
+  const modalPreview = document.getElementById('modalPreview');
+  const createThemeBtnModal = document.getElementById('createThemeBtn');
+
+  // Default theme template
+  const defaultTheme = {
+    name: '',
+    colors: {
+      primary: '#ffa6d2',
+      secondary: '#a6c1ff',
+      accent: '#ffd6e6',
+      text: '#6e5a6e',
+      background: '#fff0f5'
+    },
+    fontFamily: 'Quicksand',
+    type: 'custom'
+  };
+
+  // Initialize create theme button
+  if (createThemeBtnModal) {
+    createThemeBtnModal.addEventListener('click', () => openModal());
+  } else {
+    console.error('Create theme button not found');
+  }
+
+  // Open modal for create/edit
+  function openModal(theme = null) {
+    const isEditing = !!theme;
+    modalTitle.textContent = isEditing ? 'Edit Theme' : 'Create New Theme';
+    
+    // Reset or fill form with theme data
+    const themeData = theme || defaultTheme;
+    
+    // Set form values
+    modalForm.elements.themeName.value = themeData.name;
+    modalForm.elements.primaryColor.value = themeData.colors.primary;
+    modalForm.elements.secondaryColor.value = themeData.colors.secondary;
+    modalForm.elements.accentColor.value = themeData.colors.accent;
+    modalForm.elements.textColor.value = themeData.colors.text;
+    modalForm.elements.backgroundColor.value = themeData.colors.background;
+    modalForm.elements.fontFamily.value = themeData.fontFamily;
+    
+    // Update preview
+    updateModalPreview();
+    
+    // Show modal
+    modal.style.display = 'block';
+    
+    // Store theme ID if editing
+    modalForm.dataset.themeId = theme ? theme.id : '';
+  }
+
+  // Update modal preview as user makes changes
+  function updateModalPreview() {
+    const formData = new FormData(modalForm);
+    const preview = document.createElement('div');
+    preview.className = 'theme-preview';
+    
+    // Create color swatches
+    const swatches = document.createElement('div');
+    swatches.className = 'color-swatches';
+    
+    const colors = [
+      { name: 'primary', color: formData.get('primaryColor') },
+      { name: 'secondary', color: formData.get('secondaryColor') },
+      { name: 'accent', color: formData.get('accentColor') }
+    ];
+
+    colors.forEach(({ name, color }) => {
+      const swatch = document.createElement('div');
+      swatch.className = `color-swatch ${name}-swatch`;
+      swatch.style.backgroundColor = color;
+      swatches.appendChild(swatch);
+    });
+
+    // Create background preview
+    const bgPreview = document.createElement('div');
+    bgPreview.className = 'bg-preview';
+    bgPreview.style.backgroundColor = formData.get('backgroundColor');
+    bgPreview.style.color = formData.get('textColor');
+    bgPreview.style.fontFamily = formData.get('fontFamily');
+    bgPreview.innerHTML = `
+      <span class="font-sample">Aa</span>
+      <span class="theme-name">${formData.get('themeName') || 'Theme Preview'}</span>
+    `;
+
+    preview.appendChild(swatches);
+    preview.appendChild(bgPreview);
+    
+    modalPreview.innerHTML = '';
+    modalPreview.appendChild(preview);
+  }
+
+  // Add event listeners for live preview
+  const formInputs = modalForm.querySelectorAll('input, select');
+  formInputs.forEach(input => {
+    input.addEventListener('input', updateModalPreview);
+  });
+
+  // Handle form submission
+  modalForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(modalForm);
+    const themeId = modalForm.dataset.themeId;
+    
+    const newTheme = {
+      id: themeId || `custom_${Date.now()}`,
+      name: formData.get('themeName'),
+      colors: {
+        primary: formData.get('primaryColor'),
+        secondary: formData.get('secondaryColor'),
+        accent: formData.get('accentColor'),
+        text: formData.get('textColor'),
+        background: formData.get('backgroundColor')
+      },
+      fontFamily: formData.get('fontFamily'),
+      type: 'custom'
+    };
+
+    try {
+      // Get existing themes
+      const { themes = [] } = await chrome.storage.sync.get('themes');
+      
+      if (themeId) {
+        // Update existing theme
+        const index = themes.findIndex(t => t.id === themeId);
+        if (index !== -1) {
+          themes[index] = newTheme;
+        }
+      } else {
+        // Add new theme
+        themes.push(newTheme);
+      }
+      
+      // Save updated themes
+      await chrome.storage.sync.set({ themes });
+      
+      // Close modal and refresh themes
+      closeModal();
+      loadThemes();
+    } catch (error) {
+      console.error('Error saving theme:', error);
+      alert('Failed to save theme. Please try again.');
+    }
+  });
+
+  // Close modal
+  function closeModal() {
+    modal.style.display = 'none';
+    modalForm.reset();
+    modalForm.dataset.themeId = '';
+  }
+
+  // Close modal when clicking outside
+  window.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+
+  // Close modal when clicking close button
+  document.querySelector('.close-modal').addEventListener('click', closeModal);
 
   // Load themes from storage and display them
   async function loadThemes() {
@@ -99,113 +266,110 @@ document.addEventListener('DOMContentLoaded', () => {
   function createThemeCard(theme, currentTheme) {
     const card = document.createElement('div');
     card.className = 'theme-card';
+    card.dataset.themeId = theme.id;
     if (theme.id === currentTheme) {
       card.classList.add('active');
     }
 
-    // Create color preview
+    // Create the card structure
     const preview = document.createElement('div');
     preview.className = 'theme-preview';
-    preview.setAttribute('data-theme', theme.id);
-
-    // Create color swatches
+    
     const swatches = document.createElement('div');
     swatches.className = 'color-swatches';
+    swatches.innerHTML = `
+      <div class="color-swatch" style="background-color: ${theme.colors.primary}"></div>
+      <div class="color-swatch" style="background-color: ${theme.colors.secondary}"></div>
+      <div class="color-swatch" style="background-color: ${theme.colors.accent}"></div>
+    `;
     
-    const colors = [
-      { name: 'primary', color: theme.colors?.primary || '#ffa6d2' },
-      { name: 'secondary', color: theme.colors?.secondary || '#a6c1ff' },
-      { name: 'accent', color: theme.colors?.accent || '#ffd6e6' }
-    ];
-
-    colors.forEach(({ name, color }) => {
-      const swatch = document.createElement('div');
-      swatch.className = `color-swatch ${name}-swatch`;
-      swatch.style.backgroundColor = color;
-      swatch.title = `${name} color: ${color}`;
-      swatches.appendChild(swatch);
-    });
-
-    // Create background preview with text sample
     const bgPreview = document.createElement('div');
     bgPreview.className = 'bg-preview';
-    bgPreview.style.backgroundColor = theme.colors?.background || '#fff0f5';
-    bgPreview.style.color = theme.colors?.text || '#6e5a6e';
-    bgPreview.style.fontFamily = theme.fontFamily || 'Quicksand';
+    bgPreview.style.backgroundColor = theme.colors.background;
+    bgPreview.style.color = theme.colors.text;
+    bgPreview.style.fontFamily = theme.fontFamily;
     bgPreview.innerHTML = `
-      <span class="font-sample">Aa</span>
-      <span class="theme-name">${theme.name}</span>
+      <div class="font-sample">Aa</div>
+      <div class="theme-name">${theme.name}</div>
     `;
-
+    
     preview.appendChild(swatches);
     preview.appendChild(bgPreview);
-
-    // Create theme info section
+    
     const info = document.createElement('div');
     info.className = 'theme-info';
     info.innerHTML = `
       <div class="theme-actions">
-        <button class="apply-btn" title="Apply Theme">Apply</button>
-        ${theme.type !== 'preset' ? `
-          <button class="edit-btn" title="Edit Theme">Edit</button>
-          <button class="delete-btn" title="Delete Theme">Delete</button>
-        ` : ''}
+        <button class="edit-btn">Edit</button>
+        <button class="delete-btn">Delete</button>
       </div>
     `;
-
+    
     card.appendChild(preview);
     card.appendChild(info);
 
-    // Add event listeners
-    const applyBtn = info.querySelector('.apply-btn');
-    applyBtn.addEventListener('click', () => applyTheme(theme));
+    // Add click handler for the entire card
+    card.addEventListener('click', async (e) => {
+      // Don't apply theme if clicking edit or delete buttons
+      if (e.target.matches('.edit-btn, .delete-btn')) {
+        return;
+      }
 
-    if (theme.type !== 'preset') {
-      const editBtn = info.querySelector('.edit-btn');
-      const deleteBtn = info.querySelector('.delete-btn');
-      
-      editBtn.addEventListener('click', () => openModal(theme));
-      deleteBtn.addEventListener('click', () => deleteTheme(theme.id));
-    }
+      // Add loading state
+      card.classList.add('loading');
+
+      try {
+        // Mark this theme as active and others as inactive
+        const themes = await getThemes();
+        const updatedThemes = themes.map(t => ({
+          ...t,
+          active: t.id === theme.id
+        }));
+        
+        // Update all theme cards
+        document.querySelectorAll('.theme-card').forEach(c => {
+          c.classList.toggle('active', c.dataset.themeId === theme.id);
+        });
+
+        // Save updated themes
+        await chrome.storage.sync.set({ themes: updatedThemes });
+        
+        // Apply the theme
+        await applyTheme({ ...theme, active: true });
+        
+        showNotification('Theme applied successfully!', 'success');
+      } catch (error) {
+        console.error('Error applying theme:', error);
+        showNotification('Failed to apply theme. Please try again.', 'error');
+      } finally {
+        card.classList.remove('loading');
+      }
+    });
+
+    // Add edit button handler
+    const editBtn = info.querySelector('.edit-btn');
+    editBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openEditThemeModal(theme);
+    });
+
+    // Add delete button handler
+    const deleteBtn = info.querySelector('.delete-btn');
+    deleteBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      if (confirm('Are you sure you want to delete this theme?')) {
+        try {
+          await deleteTheme(theme.id);
+          card.remove();
+          showNotification('Theme deleted successfully!', 'success');
+        } catch (error) {
+          console.error('Error deleting theme:', error);
+          showNotification('Failed to delete theme. Please try again.', 'error');
+        }
+      }
+    });
 
     return card;
-  }
-
-  // Open modal for creating/editing theme
-  function openModal(theme = null) {
-    editingThemeId = theme ? theme.id : null;
-    const modalTitle = document.getElementById('modalTitle');
-    const themeNameInput = document.getElementById('themeName');
-    const primaryColorInput = document.getElementById('primaryColor');
-    const secondaryColorInput = document.getElementById('secondaryColor');
-    const accentColorInput = document.getElementById('accentColor');
-    const textColorInput = document.getElementById('textColor');
-    const bgColorInput = document.getElementById('bgColor');
-    const fontFamilySelect = document.getElementById('fontFamily');
-
-    modalTitle.textContent = theme ? 'Edit Theme' : 'Create New Theme';
-    
-    if (theme) {
-      themeNameInput.value = theme.name;
-      primaryColorInput.value = theme.colors.primary;
-      secondaryColorInput.value = theme.colors.secondary;
-      accentColorInput.value = theme.colors.accent;
-      textColorInput.value = theme.colors.text;
-      bgColorInput.value = theme.colors.background;
-      fontFamilySelect.value = theme.fontFamily || 'Quicksand';
-    } else {
-      themeForm.reset();
-    }
-
-    themeEditorModal.classList.add('active');
-    updatePreview();
-  }
-
-  // Close modal
-  function closeModal() {
-    themeEditorModal.classList.remove('active');
-    editingThemeId = null;
-    themeForm.reset();
   }
 
   // Preview current theme settings
@@ -298,37 +462,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Apply theme
   async function applyTheme(theme) {
-    await chrome.storage.sync.set({ 
-      currentTheme: theme.id,
-      enabled: true
-    });
-
-    // Update recently used themes
-    const result = await chrome.storage.sync.get(['recentlyUsed']);
-    let recentlyUsed = result.recentlyUsed || [];
-    recentlyUsed = [theme.id, ...recentlyUsed.filter(id => id !== theme.id)].slice(0, 5);
-    await chrome.storage.sync.set({ recentlyUsed });
-
-    // Update display
-    displayThemes(themes, theme.id);
-
-    // Apply to current tab
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id, {
-        action: 'toggleTheme',
-        enabled: true,
-        theme: theme.id
+    try {
+      // Save the theme to storage
+      await chrome.storage.sync.set({
+        activeTheme: {
+          ...theme,
+          active: true
+        }
       });
-    });
+
+      // Update theme colors in the manifest
+      await updateManifestColors(theme);
+
+      // Update any active tabs
+      const tabs = await chrome.tabs.query({});
+      for (const tab of tabs) {
+        try {
+          await chrome.tabs.sendMessage(tab.id, { action: 'updateTheme', theme });
+        } catch (error) {
+          // Ignore errors for tabs that don't have our content script
+          console.log('Tab not ready for theme update:', tab.id);
+        }
+      }
+    } catch (error) {
+      console.error('Error applying theme:', error);
+      throw error; // Re-throw to handle in the UI
+    }
   }
 
-  // Add event listeners for live preview
-  const colorInputs = document.querySelectorAll('input[type="color"]');
-  const fontFamilySelect = document.getElementById('fontFamily');
-  
-  colorInputs.forEach(input => {
-    input.addEventListener('input', updatePreview);
-  });
-  
-  fontFamilySelect.addEventListener('change', updatePreview);
+  // Helper function to get themes from storage
+  async function getThemes() {
+    const data = await chrome.storage.sync.get('themes');
+    return data.themes || [];
+  }
 });

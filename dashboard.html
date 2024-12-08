@@ -7,10 +7,10 @@
 </head>
 <body>
   <div class="dashboard-container">
-    <header>
+    <div class="dashboard-header">
       <h1>Theme Dashboard</h1>
-      <button id="createTheme" class="primary-btn">Create New Theme</button>
-    </header>
+      <button id="createThemeBtn" class="create-theme-btn">Create New Theme</button>
+    </div>
 
     <div class="themes-container">
       <h2>Your Themes</h2>
@@ -19,74 +19,70 @@
       </div>
     </div>
 
-    <!-- Theme Editor Modal -->
-    <div id="themeEditorModal" class="modal">
+    <!-- Theme Modal -->
+    <div id="themeModal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
           <h2 id="modalTitle">Create New Theme</h2>
-          <button class="close-btn">&times;</button>
+          <span class="close-modal">&times;</span>
         </div>
-        <div class="modal-body">
+        
+        <form id="themeForm">
           <div class="form-group">
             <label for="themeName">Theme Name</label>
-            <input type="text" id="themeName" placeholder="Enter theme name">
+            <input type="text" id="themeName" name="themeName" required placeholder="Enter a name for your theme">
           </div>
 
           <div class="form-group">
-            <label>Background</label>
-            <div class="background-options">
-              <div class="color-picker">
-                <label>Color</label>
-                <input type="color" id="bgColor" value="#ffffff">
-              </div>
-              <div class="gradient-picker">
-                <label>Gradient</label>
-                <select id="bgGradient">
-                  <option value="">No Gradient</option>
-                  <option value="linear">Linear Gradient</option>
-                  <option value="radial">Radial Gradient</option>
-                </select>
-              </div>
-            </div>
+            <label for="primaryColor">Primary Color</label>
+            <input type="color" id="primaryColor" name="primaryColor" value="#ffa6d2">
           </div>
 
           <div class="form-group">
-            <label>Font</label>
-            <div class="font-options">
-              <select id="fontFamily">
-                <option value="Comic Neue">Comic Neue</option>
-                <option value="Poppins">Poppins</option>
-                <option value="Quicksand">Quicksand</option>
-              </select>
-              <div class="color-picker">
-                <label>Color</label>
-                <input type="color" id="textColor" value="#000000">
-              </div>
-            </div>
+            <label for="secondaryColor">Secondary Color</label>
+            <input type="color" id="secondaryColor" name="secondaryColor" value="#a6c1ff">
           </div>
 
           <div class="form-group">
-            <label>Animations</label>
-            <div class="animation-options">
-              <label class="checkbox-label">
-                <input type="checkbox" value="sparkles"> Sparkles
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="bounce"> Bounce
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" value="float"> Float
-              </label>
-            </div>
+            <label for="accentColor">Accent Color</label>
+            <input type="color" id="accentColor" name="accentColor" value="#ffd6e6">
           </div>
-        </div>
-        <div class="modal-footer">
-          <button id="previewTheme" class="secondary-btn">Preview</button>
-          <button id="saveTheme" class="primary-btn">Save Theme</button>
-        </div>
+
+          <div class="form-group">
+            <label for="textColor">Text Color</label>
+            <input type="color" id="textColor" name="textColor" value="#6e5a6e">
+          </div>
+
+          <div class="form-group">
+            <label for="backgroundColor">Background Color</label>
+            <input type="color" id="backgroundColor" name="backgroundColor" value="#fff0f5">
+          </div>
+
+          <div class="form-group">
+            <label for="fontFamily">Font Family</label>
+            <select id="fontFamily" name="fontFamily">
+              <option value="Quicksand">Quicksand</option>
+              <option value="Arial">Arial</option>
+              <option value="Helvetica">Helvetica</option>
+              <option value="Times New Roman">Times New Roman</option>
+              <option value="Georgia">Georgia</option>
+              <option value="Verdana">Verdana</option>
+              <option value="Roboto">Roboto</option>
+              <option value="Open Sans">Open Sans</option>
+            </select>
+          </div>
+
+          <div id="modalPreview" class="theme-preview-container"></div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn primary">Save Theme</button>
+            <button type="button" class="btn secondary close-modal">Cancel</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
+
   <script src="scripts/dashboard.js"></script>
 </body>
 </html>
