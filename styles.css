@@ -1,0 +1,79 @@
+:root {
+    --primary-color: #ffd6e0;
+    --secondary-color: #ffefef;
+    --text-color: #635c5c;
+    --accent-color: #ffb6c1;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: var(--secondary-color);
+    background-image: radial-gradient(#fff 10%, transparent 11%),
+                      radial-gradient(#fff 10%, transparent 11%);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 15px;
+    color: var(--text-color);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.cute-header {
+    background-color: var(--primary-color);
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.cute-header h1 {
+    margin: 0;
+    color: var(--text-color);
+}
+
+.content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.cute-card {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.cute-card:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+h2, h3 {
+    color: var(--text-color);
+    margin-top: 0;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+li {
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+li:before {
+    content: "🌸";
+    position: absolute;
+    left: 0;
+}

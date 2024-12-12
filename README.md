@@ -1,27 +1,43 @@
 # Cutify Web Chrome Extension
 
-Cutify Web is a Chrome extension that allows you to customize any website with cute themes and personalized styles. Transform your browsing experience with adorable preset themes or create your own custom themes with unique colors, fonts, and animations.
+Cutify Web is a Chrome extension that allows you to customize any website with beautiful themes and personalized styles. Transform your browsing experience with immersive themes that feature subtle animations, interactive elements, and dynamic backgrounds.
 
 ## Features
 
-### Preset Themes
-- **Pastel Paradise**: Soft gradients and round fonts
-- **Starry Night**: Dark backgrounds with twinkling stars
-- **Fluffy Clouds**: Light blue skies and cloud patterns
-- **Kawaii Cafe**: Beige tones with coffee and dessert icons
+### Immersive Themes
+- **Starry Night**: Dark backgrounds with twinkling stars and floating particles
+- **Forest**: Gentle green patterns with floating leaf effects
+- **Ocean**: Flowing grid patterns with wave ripple animations
+- **Sunset**: Smooth gradient transitions with subtle sun ray effects
+- **Cyberpunk**: Neon grid patterns with dual-color glow effects
 
-### Custom Theme Builder
-- Customize backgrounds with solid colors, gradients, or images
-- Choose from a selection of cute fonts
-- Set custom colors for text, buttons, and links
-- Add fun animations like sparkles, bouncing elements, or floating stars
+### Interactive Elements
+Each theme includes specially designed interactive elements:
+- **Links**: 
+  - Theme-colored gradients
+  - Smooth hover animations
+  - Glowing underline effects
+- **Buttons**: 
+  - Theme-matched backgrounds
+  - Elevation effects on hover
+  - Subtle glow animations
+- **Forms**:
+  - Themed input fields
+  - Glowing focus states
+  - Matching checkboxes and radio buttons
+
+### Dynamic Backgrounds
+- Multi-layered background effects
+- Smooth animations and transitions
+- Particle effects unique to each theme
+- Optimized for readability
 
 ### Additional Features
 - Quick theme toggle
-- Save and manage multiple custom themes
-- Import/Export themes to share with friends
-- Live preview mode
 - Automatic theme application to dynamic content
+- Preserved website functionality
+- Performance-optimized animations
+- Responsive design support
 
 ## Installation
 
@@ -34,33 +50,59 @@ Cutify Web is a Chrome extension that allows you to customize any website with c
 
 1. Click the Cutify Web icon in your Chrome toolbar
 2. Toggle the extension on/off using the switch
-3. Choose a preset theme or create your own:
-   - Select the "Presets" tab for pre-made themes
-   - Go to the "Custom" tab to create your own theme
-4. Use the preview button to see your changes in real-time
-5. Save your custom themes to use them later
+3. Choose your preferred theme:
+   - Starry Night: Perfect for dark mode lovers
+   - Forest: Calming nature-inspired design
+   - Ocean: Soothing waves and ripples
+   - Sunset: Warm, gradient-based theme
+   - Cyberpunk: Bold, tech-inspired look
 
-## Creating Custom Themes
+## Theme Details
 
-1. Open the Custom Theme Builder
-2. Choose your preferred:
-   - Background color or gradient
-   - Font family
-   - Text color
-   - Animations
-3. Click "Preview" to see your changes
-4. Click "Save Theme" to keep your creation
+### Starry Night
+- Twinkling star background
+- Floating particle effects
+- Starlight-inspired glows
+- White/blue color scheme
 
-## Sharing Themes
+### Forest
+- Natural green patterns
+- Floating leaf particles
+- Organic animations
+- Earth-tone color palette
 
-1. Go to the Settings tab
-2. Click "Export Theme" to save your themes as a JSON file
-3. Share the JSON file with friends
-4. They can import it using the "Import Theme" option
+### Ocean
+- Flowing grid patterns
+- Wave ripple effects
+- Dual-layer animations
+- Deep blue color scheme
+
+### Sunset
+- Smooth gradient transitions
+- Subtle sun ray effects
+- Warm color palette
+- Aurora-like animations
+
+### Cyberpunk
+- Neon grid patterns
+- Dual-color glow effects
+- Tech-inspired animations
+- Bold color contrasts
+
+## Performance
+
+- Optimized animations for smooth performance
+- Minimal impact on page load times
+- Efficient CSS transitions
+- Background effects rendered at optimal quality
 
 ## Contributing
 
-We welcome contributions! Please feel free to submit a Pull Request.
+We welcome contributions! Please feel free to submit a Pull Request. Areas we're particularly interested in:
+- New theme designs
+- Performance optimizations
+- Animation improvements
+- Accessibility enhancements
 
 ## License
 
@@ -69,3 +111,10 @@ MIT License - feel free to use this extension for personal or commercial purpose
 ## Support
 
 If you encounter any issues or have suggestions, please open an issue in this repository.
+
+## Upcoming Features
+- Theme customization options
+- More interactive animations
+- Additional background effects
+- Custom color palette support
+- Theme sharing capabilities

@@ -1,0 +1,234 @@
+/* Gmail-specific styles with improved white space handling */
+:root {
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.05);
+  --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --bg-fade: linear-gradient(to right, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+}
+
+/* Base styles to handle white spaces */
+.aeJ, .nH, main.aeF {
+  background: transparent !important;
+}
+
+/* Clean up the header with gradient */
+.gb_Sd {
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Modernize the search bar */
+input.gb_yf {
+  border-radius: var(--radius-full) !important;
+  background: rgba(255, 255, 255, 0.7) !important;
+  border: 1px solid rgba(0, 0, 0, 0.04) !important;
+  padding: var(--spacing-sm) var(--spacing-lg) !important;
+  transition: var(--transition) !important;
+}
+
+input.gb_yf:focus {
+  background: rgba(255, 255, 255, 0.9) !important;
+  box-shadow: var(--shadow-sm) !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Email list styling with gradient fade */
+.aDP {
+  background: transparent !important;
+  padding: var(--spacing-xs) !important;
+  position: relative !important;
+}
+
+.aDP::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100px;
+  background: var(--bg-fade) !important;
+  pointer-events: none;
+}
+
+/* Individual email rows */
+.zA {
+  border-radius: var(--radius-md) !important;
+  margin: var(--spacing-xs) 0 !important;
+  transition: var(--transition) !important;
+  border: 1px solid transparent !important;
+  padding: var(--spacing-sm) var(--spacing-md) !important;
+  background: rgba(255, 255, 255, 0.4) !important;
+}
+
+.zA:hover {
+  background: rgba(255, 255, 255, 0.6) !important;
+  box-shadow: var(--shadow-sm) !important;
+  border-color: rgba(0, 0, 0, 0.02) !important;
+}
+
+/* Unread emails */
+.zA.zE {
+  background: rgba(255, 255, 255, 0.7) !important;
+  font-weight: 500 !important;
+}
+
+/* Email preview */
+.y2 {
+  font-size: 0.9em !important;
+  opacity: 0.6 !important;
+  max-width: 80% !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Compose button */
+.T-I.T-I-KE {
+  border-radius: var(--radius-full) !important;
+  padding: var(--spacing-sm) var(--spacing-lg) !important;
+  box-shadow: var(--shadow-sm) !important;
+  transition: var(--transition) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.3px !important;
+  background: rgba(255, 255, 255, 0.8) !important;
+}
+
+.T-I.T-I-KE:hover {
+  box-shadow: var(--shadow-md) !important;
+  transform: translateY(-1px) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Sidebar navigation */
+.ain {
+  border-radius: var(--radius-md) !important;
+  padding: var(--spacing-sm) var(--spacing-md) !important;
+  margin: var(--spacing-xs) var(--spacing-sm) !important;
+  transition: var(--transition) !important;
+  background: rgba(255, 255, 255, 0.4) !important;
+}
+
+.ain:hover {
+  background: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Selected item in sidebar */
+.ain.aiu {
+  background: rgba(255, 255, 255, 0.7) !important;
+  font-weight: 500 !important;
+}
+
+/* Labels and tags */
+.wT > .n3 {
+  border-radius: var(--radius-full) !important;
+  padding: 2px var(--spacing-sm) !important;
+  font-size: 0.85em !important;
+  font-weight: 500 !important;
+  opacity: 0.8 !important;
+  background: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Checkboxes */
+.T-Jo {
+  border-radius: var(--radius-sm) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  transition: var(--transition) !important;
+}
+
+/* Date column */
+.xW {
+  font-size: 0.85em !important;
+  opacity: 0.6 !important;
+  font-weight: 500 !important;
+}
+
+/* Star icon */
+.T-KT {
+  opacity: 0.4 !important;
+  transition: var(--transition) !important;
+}
+
+.T-KT:hover {
+  opacity: 0.8 !important;
+  transform: scale(1.1) !important;
+}
+
+/* Toolbar */
+.G-atb {
+  background: rgba(255, 255, 255, 0.6) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03) !important;
+  padding: var(--spacing-sm) var(--spacing-lg) !important;
+  backdrop-filter: blur(4px);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-radius: var(--radius-full) !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Avatar */
+.gbii {
+  border-radius: 50% !important;
+  transition: var(--transition) !important;
+  opacity: 0.9 !important;
+}
+
+.gbii:hover {
+  transform: scale(1.05) !important;
+  opacity: 1 !important;
+}
+
+/* Message list container */
+.AO {
+  background: transparent !important;
+}
+
+/* Improve readability */
+* {
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: antialiased !important;
+}
+
+/* Handle white space transitions */
+.nH, .no, .nn {
+  background: transparent !important;
+}
+
+/* Add gradient fade to list views */
+.Cp {
+  position: relative !important;
+}
+
+.Cp::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 120px;
+  background: var(--bg-fade) !important;
+  pointer-events: none;
+}

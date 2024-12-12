@@ -1,65 +1,141 @@
-document.addEventListener('DOMContentLoaded', () => {
-  // Cache DOM elements
+document.addEventListener('DOMContentLoaded', async () => {
   const themeToggle = document.getElementById('themeToggle');
   const openDashboardBtn = document.getElementById('openDashboard');
   const currentThemeText = document.getElementById('currentTheme');
+  const themeGrid = document.getElementById('themeGrid');
 
-  // Load saved state
-  async function loadState() {
-    const result = await chrome.storage.sync.get(['enabled', 'currentTheme', 'themes']);
-    const enabled = result.enabled ?? false;
-    themeToggle.checked = enabled;
+  // Load initial state and apply to all tabs
+  async function initializeState() {
+    const { enabled, activeTheme, themes = [] } = await chrome.storage.sync.get(['enabled', 'activeTheme', 'themes']);
+    themeToggle.checked = enabled ?? false;
+    
+    // Get the active theme object
+    const currentTheme = themes.find(t => t.id === activeTheme);
+    
+    // Apply to all tabs based on current state
+    const tabs = await chrome.tabs.query({});
+    await Promise.all(tabs.map(tab => {
+      return chrome.tabs.sendMessage(tab.id, {
+        action: 'toggleTheme',
+        enabled: enabled ?? false,
+        theme: currentTheme
+      }).catch(() => {/* Ignore errors for inactive tabs */});
+    }));
 
-    // Find theme name
-    const currentThemeId = result.currentTheme || 'pastel-paradise';
-    let themeName = 'Pastel Paradise'; // default
-
-    // Check preset themes
-    const presetThemes = {
-      'pastel-paradise': 'Pastel Paradise',
-      'starry-night': 'Starry Night',
-      'fluffy-clouds': 'Fluffy Clouds'
-    };
-
-    if (presetThemes[currentThemeId]) {
-      themeName = presetThemes[currentThemeId];
-    } else if (result.themes) {
-      // Check custom themes
-      const customTheme = result.themes.find(t => t.id === currentThemeId);
-      if (customTheme) {
-        themeName = customTheme.name;
-      }
+    // Update popup UI
+    if (currentTheme) {
+      updateCurrentThemeDisplay(currentTheme);
     }
-
-    currentThemeText.textContent = themeName;
   }
 
-  // Theme toggle
+  // Handle theme toggle
   themeToggle.addEventListener('change', async () => {
     const enabled = themeToggle.checked;
-    const result = await chrome.storage.sync.get(['currentTheme']);
-    const currentTheme = result.currentTheme || 'pastel-paradise';
+    
+    try {
+      // Save state
+      await chrome.storage.sync.set({ enabled });
+      
+      // Get current theme
+      const { activeTheme, themes = [] } = await chrome.storage.sync.get(['activeTheme', 'themes']);
+      const currentTheme = themes.find(t => t.id === activeTheme);
+      
+      // Apply to all tabs
+      const tabs = await chrome.tabs.query({});
+      await Promise.all(tabs.map(tab => {
+        return chrome.tabs.sendMessage(tab.id, {
+          action: 'toggleTheme',
+          enabled,
+          theme: enabled ? currentTheme : null
+        }).catch(() => {/* Ignore errors for inactive tabs */});
+      }));
+    } catch (error) {
+      console.error('Error toggling theme:', error);
+      // Revert toggle if there was an error
+      themeToggle.checked = !enabled;
+    }
+  });
 
-    // Save state
-    await chrome.storage.sync.set({ enabled });
+  // Load and display themes
+  async function loadThemes() {
+    const { themes = defaultThemes, activeTheme } = await chrome.storage.sync.get(['themes', 'activeTheme']);
+    displayThemes(themes, activeTheme);
+    updateCurrentThemeDisplay(themes.find(t => t.id === activeTheme));
+  }
 
-    // Apply to current tab
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id, {
-        action: 'toggleTheme',
-        enabled,
-        theme: currentTheme
+  // Display themes in the grid
+  function displayThemes(themes, currentThemeId) {
+    themeGrid.innerHTML = '';
+    themes.forEach(theme => {
+      const card = document.createElement('div');
+      card.className = `theme-card ${theme.id === currentThemeId ? 'active' : ''}`;
+      
+      const preview = document.createElement('div');
+      preview.className = 'theme-preview';
+      preview.style.background = `linear-gradient(45deg, ${theme.colors.primary}, ${theme.colors.secondary})`;
+      
+      const name = document.createElement('div');
+      name.className = 'theme-name';
+      name.textContent = theme.name;
+      
+      card.appendChild(preview);
+      card.appendChild(name);
+      
+      card.addEventListener('click', async () => {
+        if (!themeToggle.checked) {
+          // If toggle is off, turn it on when selecting a theme
+          themeToggle.checked = true;
+          await chrome.storage.sync.set({ enabled: true });
+        }
+        
+        try {
+          // Update active theme
+          await chrome.storage.sync.set({ activeTheme: theme.id });
+          
+          // Apply to all tabs
+          const tabs = await chrome.tabs.query({});
+          await Promise.all(tabs.map(tab => {
+            return chrome.tabs.sendMessage(tab.id, {
+              action: 'toggleTheme',
+              enabled: true,
+              theme: theme
+            }).catch(() => {/* Ignore errors for inactive tabs */});
+          }));
+          
+          // Update UI
+          document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+          updateCurrentThemeDisplay(theme);
+        } catch (error) {
+          console.error('Error applying theme:', error);
+        }
       });
+      
+      themeGrid.appendChild(card);
     });
+  }
+
+  // Update current theme display
+  function updateCurrentThemeDisplay(theme) {
+    if (!theme) return;
+    currentThemeText.textContent = theme.name;
+    currentThemeText.style.color = theme.colors.text;
+    document.body.style.backgroundColor = theme.colors.background;
+  }
+
+  // Listen for theme updates from dashboard
+  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === 'themesUpdated') {
+      loadThemes();
+    }
   });
 
   // Open dashboard
   openDashboardBtn.addEventListener('click', () => {
-    chrome.tabs.create({
-      url: chrome.runtime.getURL('dashboard.html')
-    });
+    chrome.tabs.create({ url: 'dashboard.html' });
   });
 
   // Initialize
-  loadState();
+  await initializeState();
+  loadThemes();
 });

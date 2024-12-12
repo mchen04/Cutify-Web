@@ -406,7 +406,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
-  // Save theme
   async function saveTheme() {
     const themeData = getThemeDataFromForm();
     
@@ -415,49 +414,89 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const result = await chrome.storage.sync.get(['themes']);
-    let themes = result.themes || [];
+    try {
+      const { themes = [] } = await chrome.storage.sync.get('themes');
+      let updatedThemes = [...themes];
+      
+      if (editingThemeId) {
+        // Update existing theme
+        const index = themes.findIndex(t => t.id === editingThemeId);
+        if (index !== -1) {
+          updatedThemes[index] = { ...themeData, id: editingThemeId };
+        }
+      } else {
+        // Create new theme
+        const newTheme = {
+          ...themeData,
+          id: 'theme_' + Date.now(),
+          type: 'custom'
+        };
+        updatedThemes.push(newTheme);
+      }
 
-    if (editingThemeId) {
-      // Update existing theme
-      themes = themes.map(theme => 
-        theme.id === editingThemeId 
-          ? { ...theme, ...themeData }
-          : theme
-      );
-    } else {
-      // Create new theme
-      themes.push({
-        id: 'custom-' + Date.now(),
-        type: 'custom',
-        ...themeData
+      // Save to storage
+      await chrome.storage.sync.set({ themes: updatedThemes });
+      
+      // Notify all tabs about the theme update
+      const tabs = await chrome.tabs.query({});
+      tabs.forEach(tab => {
+        chrome.tabs.sendMessage(tab.id, {
+          action: 'themesUpdated',
+          themes: updatedThemes
+        }).catch(() => {});
       });
-    }
 
-    await chrome.storage.sync.set({ themes });
-    closeModal();
-    loadThemes();
+      // If this was the active theme, reapply it
+      const { activeTheme } = await chrome.storage.sync.get('activeTheme');
+      if (activeTheme === editingThemeId) {
+        const updatedTheme = updatedThemes.find(t => t.id === editingThemeId);
+        if (updatedTheme) {
+          await chrome.storage.sync.set({ activeTheme: updatedTheme.id });
+          applyTheme(updatedTheme);
+        }
+      }
+
+      // Refresh the display
+      displayThemes(updatedThemes);
+      closeModal();
+    } catch (error) {
+      console.error('Error saving theme:', error);
+      alert('Failed to save theme. Please try again.');
+    }
   }
 
-  // Delete theme
   async function deleteTheme(themeId) {
     if (!confirm('Are you sure you want to delete this theme?')) {
       return;
     }
 
-    const result = await chrome.storage.sync.get(['themes', 'currentTheme']);
-    let themes = result.themes || [];
-    
-    // Remove theme
-    themes = themes.filter(theme => theme.id !== themeId);
-    
-    // If deleted theme was current theme, switch to default
-    if (result.currentTheme === themeId) {
-      await chrome.storage.sync.set({ currentTheme: 'pastel-paradise' });
-    }
+    try {
+      const { themes = [], activeTheme } = await chrome.storage.sync.get(['themes', 'activeTheme']);
+      const updatedThemes = themes.filter(t => t.id !== themeId);
+      
+      // Save updated themes
+      await chrome.storage.sync.set({ themes: updatedThemes });
+      
+      // If we deleted the active theme, switch to default
+      if (activeTheme === themeId) {
+        await chrome.storage.sync.set({ activeTheme: 'default' });
+      }
+      
+      // Notify all tabs
+      const tabs = await chrome.tabs.query({});
+      tabs.forEach(tab => {
+        chrome.tabs.sendMessage(tab.id, {
+          action: 'themesUpdated',
+          themes: updatedThemes
+        }).catch(() => {});
+      });
 
-    await chrome.storage.sync.set({ themes });
-    loadThemes();
+      // Refresh display
+      displayThemes(updatedThemes);
+    } catch (error) {
+      console.error('Error deleting theme:', error);
+      alert('Failed to delete theme. Please try again.');
+    }
   }
 
   // Apply theme

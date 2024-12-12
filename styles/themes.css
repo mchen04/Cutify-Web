@@ -1,12 +1,10 @@
 /* Base Theme Variables */
 :root {
-  --cutify-primary-color: #ff9ed2;
-  --cutify-secondary-color: #b8c0ff;
-  --cutify-accent-color: #ffd6ff;
-  --cutify-text-color: #594a4e;
-  --cutify-bg-color: #fff8fa;
-  --cutify-font-family: 'Quicksand', sans-serif;
-  --cutify-border-radius: 20px;
+  --primary-color: #ffa6d2;
+  --secondary-color: #a6c1ff;
+  --accent-color: #ffd6e6;
+  --text-color: #6e5a6e;
+  --background-color: #fff0f5;
 }
 
 /* Font imports */
@@ -15,109 +13,135 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
 /* Global Styles for All Themes */
+[data-cutify-styled] {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body, html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+* {
+  margin: initial;
+  padding: initial;
+  box-sizing: initial;
+  font-size: initial;
+  font-weight: initial;
+  line-height: initial;
+  border-radius: initial;
+}
+
+/* Preserve Functionality */
 [data-theme] {
-  font-family: var(--cutify-font-family) !important;
-  color: var(--cutify-text-color) !important;
-  background-color: var(--cutify-bg-color) !important;
-  transition: all 0.3s ease !important;
+  pointer-events: none !important;
 }
 
+[data-theme] a,
 [data-theme] button,
-[data-theme] .button,
-[data-theme] input[type="button"],
-[data-theme] input[type="submit"] {
-  background-color: var(--cutify-primary-color) !important;
-  color: white !important;
-  border: none !important;
-  border-radius: var(--cutify-border-radius) !important;
-  padding: 8px 16px !important;
-  cursor: pointer !important;
-  transition: transform 0.2s ease !important;
-}
-
-[data-theme] button:hover,
-[data-theme] .button:hover,
-[data-theme] input[type="button"]:hover,
-[data-theme] input[type="submit"]:hover {
-  transform: scale(1.05) !important;
-}
-
-[data-theme] input[type="text"],
-[data-theme] input[type="password"],
-[data-theme] input[type="email"],
-[data-theme] textarea {
-  background-color: white !important;
-  border: 2px solid var(--cutify-accent-color) !important;
-  border-radius: calc(var(--cutify-border-radius) / 2) !important;
-  padding: 8px 12px !important;
-}
-
-[data-theme] a {
-  color: var(--cutify-primary-color) !important;
-  text-decoration: none !important;
-  transition: all 0.2s ease !important;
-}
-
-[data-theme] a:hover {
-  color: var(--cutify-secondary-color) !important;
-  text-decoration: underline !important;
-}
-
-[data-theme] h1, 
-[data-theme] h2, 
-[data-theme] h3, 
-[data-theme] h4, 
-[data-theme] h5, 
-[data-theme] h6 {
-  color: var(--cutify-primary-color) !important;
-  font-weight: 600 !important;
-}
-
-[data-theme] img {
-  border-radius: calc(var(--cutify-border-radius) / 2) !important;
-  transition: transform 0.3s ease !important;
-}
-
-[data-theme] img:hover {
-  transform: scale(1.02) !important;
-}
-
-/* Card-like elements */
-[data-theme] div:not([class*="cutify"]) {
-  border-radius: calc(var(--cutify-border-radius) / 3) !important;
+[data-theme] input,
+[data-theme] select,
+[data-theme] textarea,
+[data-theme] [role="button"],
+[data-theme] [tabindex],
+[data-theme] .clickable,
+[data-theme] [onclick],
+[data-theme] video,
+[data-theme] iframe,
+[data-theme] [contenteditable="true"] {
+  pointer-events: auto !important;
 }
 
 /* Pastel Paradise Theme */
 [data-theme="pastel-paradise"] {
-  --cutify-primary-color: #ffa6d2;
-  --cutify-secondary-color: #a6c1ff;
-  --cutify-accent-color: #ffd6e6;
-  --cutify-text-color: #6e5a6e;
-  --cutify-bg-color: #fff0f5;
-  --cutify-font-family: 'Quicksand', sans-serif;
-  background: linear-gradient(135deg, var(--cutify-bg-color), var(--cutify-accent-color)) !important;
+  --primary-color: #ffa6d2;
+  --secondary-color: #a6c1ff;
+  --accent-color: #ffd6e6;
+  --text-color: #6e5a6e;
+  --background-color: #fff0f5;
 }
 
-/* Starry Night Theme */
+/* Starry Night Theme - Less Aggressive Version */
 [data-theme="starry-night"] {
-  --cutify-primary-color: #b19cd9;
-  --cutify-secondary-color: #9db4ff;
-  --cutify-accent-color: #e6e6ff;
-  --cutify-text-color: #e6e6ff;
-  --cutify-bg-color: #2a2a4a;
-  --cutify-font-family: 'Poppins', sans-serif;
-  background: var(--cutify-bg-color) !important;
+  --primary-color: #b19cd9;
+  --secondary-color: #9db4ff;
+  --accent-color: #e6e6ff;
+  --text-color: #e6e6ff;
+  --background-color: transparent;
+}
+
+/* Theme Overlay Approach */
+.cutify-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 2147483646;
+}
+
+[data-theme="starry-night"] .cutify-overlay {
+  background: linear-gradient(to bottom, rgba(27, 39, 53, 0.85), rgba(9, 10, 15, 0.85));
+}
+
+/* Preserve all form controls and interactive elements */
+[data-theme] a,
+[data-theme] button,
+[data-theme] input,
+[data-theme] select,
+[data-theme] textarea,
+[data-theme] [role="button"],
+[data-theme] [tabindex],
+[data-theme] .clickable,
+[data-theme] [onclick],
+[data-theme] video,
+[data-theme] iframe {
+  position: relative;
+  z-index: 2147483647;
+}
+
+/* Ensure text remains readable */
+[data-theme="starry-night"] {
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+/* Preserve important UI elements */
+[data-theme="starry-night"] .g,
+[data-theme="starry-night"] .search-results,
+[data-theme="starry-night"] .searchbox {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 8px 0;
+}
+
+[data-theme="starry-night"] input,
+[data-theme="starry-night"] .search-box,
+[data-theme="starry-night"] .search-input {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: var(--text-color) !important;
+}
+
+/* Preserve link colors for better visibility */
+[data-theme="starry-night"] a:not(:hover) {
+  color: #9db4ff !important;
+}
+
+[data-theme="starry-night"] a:visited {
+  color: #b19cd9 !important;
+}
+
+[data-theme="starry-night"] a:hover {
+  color: #fff !important;
 }
 
 /* Fluffy Clouds Theme */
 [data-theme="fluffy-clouds"] {
-  --cutify-primary-color: #87ceeb;
-  --cutify-secondary-color: #b0e0e6;
-  --cutify-accent-color: #e6f3ff;
-  --cutify-text-color: #4a6b8c;
-  --cutify-bg-color: #f0f8ff;
-  --cutify-font-family: 'Comic Neue', sans-serif;
-  background: linear-gradient(to bottom, var(--cutify-bg-color), var(--cutify-accent-color)) !important;
+  --primary-color: #87ceeb;
+  --secondary-color: #b0e0e6;
+  --accent-color: #e6f3ff;
+  --text-color: #4a6b8c;
+  --background-color: #f0f8ff;
 }
 
 /* Animations */
@@ -142,20 +166,141 @@
   animation: pulse 2s ease-in-out infinite;
 }
 
-/* Scrollbar Styling */
+/* Preserve scrollbars */
 [data-theme] ::-webkit-scrollbar {
   width: 12px;
+  height: 12px;
+  pointer-events: auto !important;
 }
 
 [data-theme] ::-webkit-scrollbar-track {
-  background: var(--cutify-bg-color);
+  background: rgba(255, 255, 255, 0.1);
+  pointer-events: auto !important;
 }
 
 [data-theme] ::-webkit-scrollbar-thumb {
-  background: var(--cutify-primary-color);
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  pointer-events: auto !important;
 }
 
 [data-theme] ::-webkit-scrollbar-thumb:hover {
-  background: var(--cutify-secondary-color);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Preserve selection */
+[data-theme] ::selection {
+  background: var(--primary-color) !important;
+  color: #fff !important;
+}
+
+/* Apply transitions to common elements */
+body,
+button,
+input,
+select,
+textarea {
+  transition: 
+    background-color var(--transition-duration) var(--transition-timing),
+    color var(--transition-duration) var(--transition-timing),
+    border-color var(--transition-duration) var(--transition-timing),
+    box-shadow var(--transition-duration) var(--transition-timing);
+}
+
+/* Add a subtle backdrop filter to improve readability during transitions */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  backdrop-filter: blur(0px);
+  transition: backdrop-filter var(--transition-duration) var(--transition-timing);
+  z-index: -1;
+}
+
+body.theme-transitioning::after {
+  backdrop-filter: blur(1px);
+}
+
+/* Smooth transitions for text elements */
+h1, h2, h3, h4, h5, h6, p, span, a {
+  transition: color var(--transition-duration) var(--transition-timing);
+}
+
+/* Smooth transitions for borders and backgrounds */
+* {
+  transition: 
+    border-color var(--transition-duration) var(--transition-timing),
+    background-color var(--transition-duration) var(--transition-timing);
+}
+
+/* Add a subtle text shadow during theme transitions */
+body.theme-transitioning {
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+/* Theme Variables */
+:root[data-theme="starry-night"] {
+  --cutify-primary: #b19cd9;
+  --cutify-secondary: #9db4ff;
+  --cutify-accent: #e6e6ff;
+  --cutify-text: #2a2a4a;
+  --cutify-bg-tint: rgba(157, 180, 255, 0.05);
+}
+
+/* Subtle Background Tint */
+body[data-theme="starry-night"] {
+  background-color: var(--cutify-bg-tint) !important;
+}
+
+/* Gentle Link Styling */
+[data-theme="starry-night"] a:not(:hover) {
+  color: var(--cutify-primary) !important;
+}
+
+[data-theme="starry-night"] a:hover {
+  color: var(--cutify-secondary) !important;
+}
+
+/* Subtle Button Enhancements */
+[data-theme="starry-night"] button,
+[data-theme="starry-night"] input[type="button"],
+[data-theme="starry-night"] input[type="submit"] {
+  border-color: var(--cutify-primary) !important;
+}
+
+/* Input Field Styling */
+[data-theme="starry-night"] input[type="text"],
+[data-theme="starry-night"] input[type="search"] {
+  border-color: var(--cutify-primary) !important;
+  border-radius: 8px !important;
+}
+
+/* Headings Enhancement */
+[data-theme="starry-night"] h1,
+[data-theme="starry-night"] h2,
+[data-theme="starry-night"] h3 {
+  color: var(--cutify-primary) !important;
+}
+
+/* Scrollbar Styling */
+[data-theme="starry-night"] ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+[data-theme="starry-night"] ::-webkit-scrollbar-track {
+  background: var(--cutify-bg-tint);
+}
+
+[data-theme="starry-night"] ::-webkit-scrollbar-thumb {
+  background: var(--cutify-primary);
+  border-radius: 5px;
+}
+
+[data-theme="starry-night"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--cutify-secondary);
 }
